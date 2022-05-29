@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<header>
+    <a th:href="@{/}"><button type="button">На главную</button></a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><button type="button">Администрирование</button></a>
+
+    <div sec:authorize="isAuthenticated()">
+        <a th:href="@{/user}" sec:authentication="principal.username"></a>
+        <form class="form-inline" th:method="post" th:action="@{/logout}">
+            <button type="submit">Выйти</button>
+        </form>
+    </div>
+
+    <a th:href="@{/login}" sec:authorize="!isAuthenticated()">
+        <button type="submit">Войти</button>
+    </a>
+</header>
+
+<h1>Список пользователей</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Имя</th>
+        <th>Возраст</th>
+        <th>Почта</th>
+        <th>Роль</th>
+        <th>Статус</th>
+        <th>Управление</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.getId()}"></td>
+        <td th:text="${user.getName()}"></td>
+        <td th:text="${user.getAge()}"></td>
+        <td th:text="${user.getEmail()}"></td>
+        <td th:text="${user.getRole()} ? ${user.getRole().name()} : 'null'"></td>
+        <td th:text="${user.isEnabled()} ? 'Активен' : 'Забанен'"></td>
+        <td>
+            <a th:href="@{/admin/edit/{id}(id = ${user.getId()})}"><button type="button">изменить</button></a>
+            <form class="form-inline" th:method="delete" th:action="@{/admin/{id}(id = ${user.getId()})}">
+                <button type="submit">удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<a th:href="@{/admin/new}"><button type="button">Добавить</button></a>
+
+</body>
+</html>

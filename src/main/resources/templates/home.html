@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+
+    <link rel="stylesheet" th:href="@{/styles.css}">
+</head>
+<body>
+
+<header>
+    <a th:href="@{/}"><button type="button">На главную</button></a>
+    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"><button type="button">Администрирование</button></a>
+
+    <div sec:authorize="isAuthenticated()">
+        <a th:href="@{/user}" sec:authentication="principal.username"></a>
+        <form class="form-inline" th:method="post" th:action="@{/logout}">
+            <button type="submit">Выйти</button>
+        </form>
+    </div>
+
+    <a th:href="@{/login}" sec:authorize="!isAuthenticated()">
+        <button type="submit">Войти</button>
+    </a>
+</header>
+
+<h1>Добро пожаловать!</h1>
+<a sec:authorize="isAuthenticated()" th:href="@{/user}"><button type="button">Мой аккаунт</button></a>
+
+</body>
+</html>
