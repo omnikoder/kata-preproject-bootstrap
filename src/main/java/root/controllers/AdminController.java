@@ -30,7 +30,15 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getUserPage(Model model) {
+    public String getAdminPage(Principal principal, Model model) {
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("currentUser", userService.getUserByEmail(principal.getName()));
+        return "admin";
+    }
+
+    @GetMapping(path = "/list")
+    public String getUsersPage(Model model) {
         model.addAttribute("users", userService.getUsers());
         return "users/list";
     }
@@ -42,7 +50,7 @@ public class AdminController {
     }
 
     @PostMapping(path = "/new")
-    public String saveUser(@ModelAttribute(name = "user") @Valid User user,
+    public String saveUser(@ModelAttribute(name = "newUser") @Valid User user,
                            BindingResult bindingResult) {
 
         userService.validateEmail(user.getEmail(), bindingResult);

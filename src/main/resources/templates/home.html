@@ -88,8 +88,8 @@
                 <use xlink:href="#check-circle-fill"/>
             </svg>
             <div>
-                <h5>Учетная запись активна</h5>
-                <span th:text="${currentUser.getName() + ', ' + currentUser.getRole().name()}"></span>
+                <h5>Вы авторизованы</h5>
+                <strong th:text="${currentUser.getName()}"></strong>, вам выданы права для роли <strong th:text="${currentUser.getRole().name()}"></strong>.
             </div>
         </div>
     </div>
