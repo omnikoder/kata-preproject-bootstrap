@@ -42,12 +42,12 @@
     </thead>
     <tbody>
     <tr>
-        <td th:text="${user.getId()}"></td>
-        <td th:text="${user.getName()}"></td>
-        <td th:text="${user.getAge()}"></td>
-        <td th:text="${user.getEmail()}"></td>
-        <td th:text="${user.getRole()} ? ${user.getRole().name()} : 'null'"></td>
-        <td th:text="${user.isEnabled()} ? 'Активен' : 'Забанен'"></td>
+        <td th:text="${currentUser.getId()}"></td>
+        <td th:text="${currentUser.getName()}"></td>
+        <td th:text="${currentUser.getAge()}"></td>
+        <td th:text="${currentUser.getEmail()}"></td>
+        <td th:text="${currentUser.getRole()} ? ${currentUser.getRole().name()} : 'null'"></td>
+        <td th:text="${currentUser.isEnabled()} ? 'Активен' : 'Забанен'"></td>
     </tr>
     </tbody>
 </table>

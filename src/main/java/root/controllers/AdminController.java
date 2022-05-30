@@ -10,6 +10,7 @@ import root.entities.User;
 import root.services.UserService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping(path = "/admin")
@@ -23,9 +24,9 @@ public class AdminController {
     }
 
 
-    @ModelAttribute(name = "roles")
-    private Role[] getRoles() {
-        return Role.values();
+    @ModelAttribute
+    private void addAttributes(Model model) {
+        model.addAttribute("roles", Role.values());
     }
 
     @GetMapping
@@ -63,9 +64,7 @@ public class AdminController {
     public String editUser(@ModelAttribute(name = "user") @Valid User user,
                            BindingResult bindingResult) {
 
-        if (!userService.getUserById(user.getId())
-                .getEmail().equals(user.getEmail())) {
-
+        if (!userService.getUserById(user.getId()).getEmail().equals(user.getEmail())) {
             userService.validateEmail(user.getEmail(), bindingResult);
         }
 
