@@ -9,6 +9,8 @@ import root.entities.Role;
 import root.entities.User;
 import root.services.UserService;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 
@@ -45,7 +47,7 @@ public class AdminController {
 
     @GetMapping(path = "/new")
     public String getRegistrationPage(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("newUser", new User());
         return "users/new";
     }
 
@@ -85,8 +87,15 @@ public class AdminController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public String deleteUser(@PathVariable(name = "id") Long id) {
+    public String deleteUser(@PathVariable(name = "id") Long id,
+                             @ModelAttribute(name = "currentUser") User currentUser,
+                             HttpServletRequest request) throws ServletException {
+
         userService.delete(id);
+        if (id.equals(currentUser.getId())) {
+            request.logout();
+            return "redirect:/";
+        }
         return "redirect:/admin";
     }
 }

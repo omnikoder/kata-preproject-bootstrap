@@ -29,7 +29,7 @@
 
 <h1>Регистрация пользователя</h1>
 
-<form th:method="post" th:action="@{/admin/new}" th:object="${user}">
+<form th:method="post" th:action="@{/admin/new}" th:object="${newUser}">
     <label for="name">Имя:</label>
     <input id="name" type="text" th:field="*{name}">
     <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>

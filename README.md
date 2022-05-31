@@ -7,3 +7,6 @@
 username: admin@mail.box
 password: admin
 ```
+Вместо скрипта `add-admin.sql` можно запустить тест:
+
+> ApplicationTests -> addAdmin()
