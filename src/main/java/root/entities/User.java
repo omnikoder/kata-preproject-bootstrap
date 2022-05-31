@@ -2,6 +2,7 @@ package root.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Optional;
 
 @Entity
 @Table(name = "users",
@@ -96,7 +97,7 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "ID:    %d\nNAME:  %s\nAGE:   %d\nEMAIL: %s\nROLE:  %s",
-                id, name, age, email, role.name());
+                "ID:     %d\nNAME:   %s\nAGE:    %d\nEMAIL:  %s\nROLE:   %s\nACTIVE: %b\n",
+                id, name, age, email, role, enabled);
     }
 }

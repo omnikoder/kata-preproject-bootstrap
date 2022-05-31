@@ -62,7 +62,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void update(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (user.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         entityManager.merge(user);
     }
 

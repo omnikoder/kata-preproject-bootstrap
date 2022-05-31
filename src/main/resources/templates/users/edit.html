@@ -29,7 +29,7 @@
 
 <h1>Редактирование пользователя</h1>
 
-<form th:method="patch" th:action="@{'/admin/edit/'+ ${user.getId()}}" th:object="${user}">
+<form th:method="patch" th:action="@{'/admin/edit/'+ ${updatedUser.getId()}}" th:object="${updatedUser}">
     <label for="name">Имя:</label>
     <input id="name" type="text" th:field="*{name}">
     <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
@@ -48,7 +48,7 @@
 
     <label for="role">Роль:</label>
     <select id="role" name="role" th:field="*{role}">
-        <option th:if="${user.getRole()} == null" th:value="null" th:text="null" selected></option>
+        <option th:if="${updatedUser.getRole()} == null" th:value="null" th:text="null" selected></option>
         <option th:each="role : ${roles}" th:value="${role.name()}" th:text="${role.name()}"></option>
     </select>
     <span class="error" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>

@@ -27,15 +27,16 @@ public class AdminController {
 
 
     @ModelAttribute
-    private void addAttributes(Model model) {
+    private void addAttributes(Principal principal, Model model) {
         model.addAttribute("roles", Role.values());
+        model.addAttribute("currentUser", userService.getUserByEmail(principal.getName()));
     }
 
     @GetMapping
-    public String getAdminPage(Principal principal, Model model) {
+    public String getAdminPage(Model model) {
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("newUser", new User());
-        model.addAttribute("currentUser", userService.getUserByEmail(principal.getName()));
+        model.addAttribute("updatedUser", new User());
         return "admin";
     }
 
@@ -66,33 +67,33 @@ public class AdminController {
 
     @GetMapping(path = "/edit/{id}")
     public String getEditPage(@PathVariable(name = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("updatedUser", userService.getUserById(id));
         return "users/edit";
     }
 
     @PatchMapping(path = "/edit/{id}")
-    public String editUser(@ModelAttribute(name = "user") @Valid User user,
+    public String editUser(@ModelAttribute(name = "updatedUser") @Valid User updatedUser,
                            BindingResult bindingResult) {
 
-        if (!userService.getUserById(user.getId()).getEmail().equals(user.getEmail())) {
-            userService.validateEmail(user.getEmail(), bindingResult);
+        if (!userService.getUserById(updatedUser.getId()).getEmail().equals(updatedUser.getEmail())) {
+            userService.validateEmail(updatedUser.getEmail(), bindingResult);
         }
 
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
 
-        userService.update(user);
+        userService.update(updatedUser);
         return "redirect:/admin";
     }
 
     @DeleteMapping(path = "/{id}")
     public String deleteUser(@PathVariable(name = "id") Long id,
-                             @ModelAttribute(name = "currentUser") User currentUser,
+                             @ModelAttribute(name = "currentUser", binding = false) User currentUser,
                              HttpServletRequest request) throws ServletException {
 
         userService.delete(id);
-        if (id.equals(currentUser.getId())) {
+        if (currentUser.getId().equals(id)) {
             request.logout();
             return "redirect:/";
         }
