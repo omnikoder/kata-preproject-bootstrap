@@ -46,7 +46,6 @@ public class AdminController {
 
         userService.validateEmail(user.getEmail(), bindingResult);
         if (bindingResult.hasErrors()) {
-            bindingResult.getAllErrors().forEach(System.out::println);
             model.addAttribute("newUserError", true);
             return "panel";
         }
