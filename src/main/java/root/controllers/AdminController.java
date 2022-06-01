@@ -30,23 +30,25 @@ public class AdminController {
     private void addAttributes(Principal principal, Model model) {
         model.addAttribute("roles", Role.values());
         model.addAttribute("currentUser", userService.getUserByEmail(principal.getName()));
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("updatedUser", new User());
     }
 
     @GetMapping
     public String sendPanel(Model model) {
-        model.addAttribute("users", userService.getUsers());
-        model.addAttribute("newUser", new User());
-        model.addAttribute("updatedUser", new User());
         return "panel";
     }
 
     @PostMapping(path = "/new")
     public String saveUser(@ModelAttribute(name = "newUser") @Valid User user,
-                           BindingResult bindingResult) {
+                           BindingResult bindingResult, Model model) {
 
         userService.validateEmail(user.getEmail(), bindingResult);
         if (bindingResult.hasErrors()) {
-            return "users/new";
+            bindingResult.getAllErrors().forEach(System.out::println);
+            model.addAttribute("newUserError", true);
+            return "panel";
         }
 
         userService.save(user);

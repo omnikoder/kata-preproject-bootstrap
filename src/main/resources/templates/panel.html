@@ -20,14 +20,14 @@
     <!--  Side Links  -->
     <div style="min-width: 240px;" class="nav flex-column nav-pills p-2 pt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
         <a sec:authorize="hasRole('ADMIN')"
-           th:aria-selected="${#httpServletRequest.requestURI == '/admin'}"
-           th:classappend="${#httpServletRequest.requestURI == '/admin' ? 'active' : ''}"
+           th:aria-selected="${#httpServletRequest.requestURI.contains('/admin')}"
+           th:classappend="${#httpServletRequest.requestURI.contains('/admin') ? 'active' : ''}"
            class="nav-link" id="v-pills-admin-tab" data-bs-toggle="pill" data-bs-target="#v-pills-admin" type="button" role="tab" aria-controls="v-pills-admin">
             <i class="bi-person-workspace me-2"></i>
             Администрирование
         </a>
-        <a th:aria-selected="${#httpServletRequest.requestURI == '/user'}"
-           th:classappend="${#httpServletRequest.requestURI == '/user' ? 'active' : ''}"
+        <a th:aria-selected="${#httpServletRequest.requestURI.contains('/user')}"
+           th:classappend="${#httpServletRequest.requestURI.contains('/user') ? 'active' : ''}"
            class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile">
             <i class="bi bi-person-circle me-2"></i>
             Профиль
@@ -39,21 +39,29 @@
 
         <!-- ADMIN PANEL -->
         <div sec:authorize="hasRole('ADMIN')"
-             th:classappend="${#httpServletRequest.requestURI == '/admin' ? 'show active' : ''}"
+             th:classappend="${#httpServletRequest.requestURI.contains('/admin') ? 'show active' : ''}"
              class="tab-pane fade" id="v-pills-admin" role="tabpanel" aria-labelledby="v-pills-admin-tab" tabindex="0">
             <h2 class="mb-4">Панель администратора</h2>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list" type="button" role="tab" aria-controls="nav-list" aria-selected="true">
+                    <!-- USERS TAB -->
+                    <button th:classappend="${newUserError == null ? 'active' : ''}"
+                            th:aria-selected="${newUserError == null}"
+                            class="nav-link" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list" type="button" role="tab" aria-controls="nav-list">
                         Список
                     </button>
-                    <button class="nav-link" id="nav-new-user-tab" data-bs-toggle="tab" data-bs-target="#nav-new-user" type="button" role="tab" aria-controls="nav-new-user" aria-selected="false">
+                    <!-- NEW USER TAB -->
+                    <button th:classappend="${newUserError != null ? 'active' : ''}"
+                            th:aria-selected="${newUserError != null}"
+                            class="nav-link" id="nav-new-user-tab" data-bs-toggle="tab" data-bs-target="#nav-new-user" type="button" role="tab" aria-controls="nav-new-user">
                         Новый
                     </button>
                 </div>
             </nav>
             <div class="p-4 border border-top-0 bg-white tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab" tabindex="0">
+                <!-- USERS -->
+                <div th:classappend="${newUserError == null ? 'show active' : ''}"
+                     class="tab-pane fade" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab" tabindex="0">
                     <h4 class="mb-4">Список пользователей</h4>
                     <table class="table table-striped table-hover">
                         <thead>
@@ -89,33 +97,49 @@
                 </div>
 
                 <!-- NEW USER FORM -->
-                <div class="tab-pane fade" id="nav-new-user" role="tabpanel" aria-labelledby="nav-new-user-tab" tabindex="0">
+                <div th:classappend="${newUserError != null ? 'show active' : ''}"
+                     class="tab-pane fade" id="nav-new-user" role="tabpanel" aria-labelledby="nav-new-user-tab" tabindex="0">
                     <h4 class="mb-4 text-center">Новый пользователь</h4>
                     <form th:method="post" th:action="@{/admin/new}" th:object="${newUser}"
                             style="max-width: 320px;" class="m-auto">
                         <div class="form-floating mb-3">
-                            <input th:field="*{name}" type="text" class="form-control" id="newUserName" placeholder="Введите имя">
+                            <input th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name') ? 'is-invalid' : ''}"
+                                   type="text" class="form-control" id="newUserName" placeholder="Введите имя">
                             <label for="newUserName">Имя</label>
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <input th:field="*{age}" type="number" class="form-control" id="newUserAge" placeholder="0">
+                            <input th:field="*{age}"
+                                   th:classappend="${#fields.hasErrors('age') ? 'is-invalid' : ''}"
+                                   type="number" class="form-control" id="newUserAge" placeholder="0">
                             <label for="newUserAge">Возраст</label>
+                            <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}" class="invalid-feedback"></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <input th:field="*{email}" type="email" class="form-control" id="newUserEmail" placeholder="name@example.com">
+                            <input th:field="*{email}"
+                                   th:classappend="${#fields.hasErrors('email') ? 'is-invalid' : ''}"
+                                   type="email" class="form-control" id="newUserEmail" placeholder="name@example.com">
                             <label for="newUserEmail">Почта</label>
+                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback"></span>
                         </div>
                         <div class="form-floating mb-3">
-                            <input th:field="*{password}" type="password" class="form-control" id="newUserPassword"
+                            <input th:field="*{password}"
+                                   th:classappend="${#fields.hasErrors('password') ? 'is-invalid' : ''}"
+                                   type="password" class="form-control" id="newUserPassword"
                                    placeholder="Password">
                             <label for="newUserPassword">Пароль</label>
+                            <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="invalid-feedback"></span>
                         </div>
                         <div class="form-floating mb-4">
-                            <select th:field="*{role}" class="form-select" id="newUserRole" aria-label="Floating label select example">
+                            <select th:field="*{role}"
+                                    th:classappend="${#fields.hasErrors('role') ? 'is-invalid' : ''}"
+                                    class="form-select" id="newUserRole" aria-label="Floating label select example">
                                 <option th:value="null" th:text="null" selected></option>
                                 <option th:each="role : ${roles}" th:value="${role.name()}" th:text="${role.name()}"></option>
                             </select>
                             <label for="newUserRole">Роль</label>
+                            <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback"></span>
                         </div>
                         <div class="form-check mb-5">
                             <input th:field="*{enabled}" class="form-check-input" type="checkbox" id="newUserStatus">
@@ -131,7 +155,7 @@
         </div>
 
         <!-- PROFILE -->
-        <div th:classappend="${#httpServletRequest.requestURI == '/user' ? 'show active' : ''}"
+        <div th:classappend="${#httpServletRequest.requestURI.contains('/user') ? 'show active' : ''}"
              class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
             <h2 class="mb-4">Информация об аккаунте</h2>
             <nav>
