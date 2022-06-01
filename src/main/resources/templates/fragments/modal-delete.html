@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="modal-delete" th:each="user : ${users}" th:id="${'deletingUserModal' + user.getId()}" th:aria-labelledby="${'deletingUserModalLabel' + user.getId()}" class="modal fade" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <form th:method="delete" th:action="@{'/admin/' + ${user.getId()}}" class="modal-content">
+            <div class="modal-header">
+                <h5 th:id="${'deletingUserModalLabel' + user.getId()}" class="modal-title">Подтвердите удаление</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-5">
+                <div class="form-floating mb-3">
+                    <input disabled th:value="${user.getId()}" th:id="${'deletingUserId' + user.getId()}" type="text" class="form-control" placeholder="Введите имя">
+                    <label th:for="${'deletingUserId' + user.getId()}">ID</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input disabled th:value="${user.getName()}" th:id="${'deletingUserName' + user.getId()}" type="text" class="form-control" placeholder="Введите имя">
+                    <label th:for="${'deletingUserName' + user.getId()}">Имя</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input disabled th:value="${user.getAge()}" th:id="${'deletingUserAge' + user.getId()}" type="number" class="form-control" placeholder="0">
+                    <label th:for="${'deletingUserAge' + updatedUser.getId()}">Возраст</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input disabled th:value="${user.getEmail()}" th:id="${'deletingUserEmail' + user.getId()}" type="email" class="form-control" placeholder="name@example.com">
+                    <label th:for="${'deletingUserEmail' + user.getId()}">Почта</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <select disabled th:id="${'deletingUserRole' + user.getId()}" class="form-select" aria-label="Floating label select example">
+                        <option th:each="role : ${roles}" th:value="${role.name()}" th:text="${role.name()}" th:selected="${role.name().equals(user.getRole().name)}"></option>
+                    </select>
+                    <label th:for="${'deletingUserRole' + user.getId()}">Роль</label>
+                </div>
+                <div class="form-check mb-4">
+                    <input disabled th:checked="${user.isEnabled()}" th:id="${'deletingUserStatus' + user.getId()}" class="form-check-input" type="checkbox">
+                    <label th:for="${'deletingUserStatus' + user.getId()}" class="form-check-label">
+                        Активный
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

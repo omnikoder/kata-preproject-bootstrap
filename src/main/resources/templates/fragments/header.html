@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+</head>
+<body>
+
+<header th:fragment="header" class="navbar navbar-dark bg-dark sticky-top">
+    <nav class="container-fluid px-4">
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand" th:href="@{/}">
+                <i class="h2 bi bi-house-door"></i>
+            </a>
+            <a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{/admin}">
+                <i class="bi bi-person-workspace"></i>
+                Админ
+            </a>
+        </div>
+
+        <span class="flex-grow-1 px-3 text-light text-end" sec:authorize="isAuthenticated()" sec:authentication="principal.username"></span>
+
+        <div class="dropdown" sec:authorize="isAuthenticated()">
+            <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+                Аккаунт
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+                <li>
+                    <a class="dropdown-item" th:href="@{/user}">
+                        <i class="bi bi-person"></i>
+                        Профиль
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form th:method="post" th:action="@{/logout}">
+                        <button class="dropdown-item" type="submit">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Выйти
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+
+        <a class="btn btn-light" th:href="@{/login}" sec:authorize="!isAuthenticated()">
+            <i class="bi bi-person"></i>
+            Войти
+        </a>
+    </nav>
+</header>
+
+</body>
+</html>

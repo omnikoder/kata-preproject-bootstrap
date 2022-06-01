@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import root.entities.Role;
+import root.entities.User;
 import root.services.UserService;
 
 import java.security.Principal;
@@ -23,6 +25,7 @@ public class MainController {
 
     @ModelAttribute
     private void addAttributes(Principal principal, Model model) {
+        model.addAttribute("roles", Role.values());
         if (principal != null) {
             model.addAttribute("currentUser", userService.getUserByEmail(principal.getName()));
         }
@@ -34,7 +37,10 @@ public class MainController {
     }
 
     @GetMapping(path = "/user")
-    public String getUserPage() {
-        return "users/info";
+    public String getUserPage(Model model) {
+        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("newUser", new User());
+        model.addAttribute("updatedUser", new User());
+        return "panel";
     }
 }

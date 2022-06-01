@@ -33,23 +33,11 @@ public class AdminController {
     }
 
     @GetMapping
-    public String getAdminPage(Model model) {
+    public String sendPanel(Model model) {
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("newUser", new User());
         model.addAttribute("updatedUser", new User());
-        return "admin";
-    }
-
-    @GetMapping(path = "/list")
-    public String getUsersPage(Model model) {
-        model.addAttribute("users", userService.getUsers());
-        return "users/list";
-    }
-
-    @GetMapping(path = "/new")
-    public String getRegistrationPage(Model model) {
-        model.addAttribute("newUser", new User());
-        return "users/new";
+        return "panel";
     }
 
     @PostMapping(path = "/new")
@@ -63,12 +51,6 @@ public class AdminController {
 
         userService.save(user);
         return "redirect:/admin";
-    }
-
-    @GetMapping(path = "/edit/{id}")
-    public String getEditPage(@PathVariable(name = "id") Long id, Model model) {
-        model.addAttribute("updatedUser", userService.getUserById(id));
-        return "users/edit";
     }
 
     @PatchMapping(path = "/edit/{id}")
