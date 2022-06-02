@@ -2,7 +2,6 @@ package root.entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.util.Optional;
 
 @Entity
 @Table(name = "users",
@@ -18,12 +17,12 @@ public class User {
     @Size(min = 2, max = 255, message = "* Длина имени должна быть от 2 до 255 символов")
     private String name;
 
-    @NotNull(message = "* Укажите ваш возраст")
+    @NotNull(message = "* Укажите возраст")
     @Min(value = 0, message = "* Возраст не может быть меньше 0")
     @Max(value = 120, message = "* Возраст не может превышать 120")
     private Integer age;
 
-    @NotEmpty(message = "* Введите ваш email")
+    @NotEmpty(message = "* Введите email")
     @Email(message = "* Неправильный email-адрес")
     private String email;
 

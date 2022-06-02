@@ -55,15 +55,16 @@ public class AdminController {
     }
 
     @PatchMapping(path = "/edit/{id}")
-    public String editUser(@ModelAttribute(name = "updatedUser") @Valid User updatedUser,
-                           BindingResult bindingResult) {
+    public String editUser(@PathVariable(name = "id") Long id,
+                           @ModelAttribute(name = "updatedUser") @Valid User updatedUser,
+                           BindingResult bindingResult, Model model) {
 
-        if (!userService.getUserById(updatedUser.getId()).getEmail().equals(updatedUser.getEmail())) {
+        if (!userService.getUserById(id).getEmail().equals(updatedUser.getEmail())) {
             userService.validateEmail(updatedUser.getEmail(), bindingResult);
         }
-
         if (bindingResult.hasErrors()) {
-            return "users/edit";
+            model.addAttribute("editingUserError", updatedUser);
+            return "panel";
         }
 
         userService.update(updatedUser);

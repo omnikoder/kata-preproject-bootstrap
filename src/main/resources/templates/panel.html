@@ -9,7 +9,8 @@
 
     <link rel="stylesheet" th:href="@{/bootstrap-icons.css}">
     <link rel="stylesheet" th:href="@{/bootstrap.min.css}">
-    <script th:src="@{/bootstrap.bundle.min.js}" async></script>
+    <script th:onload="document.querySelector('[data-bs-target=\'#updatedUserModal' + '[[${editingUserError} ? ${editingUserError.getId()}]]' + '\']')?.click()"
+            th:src="@{/bootstrap.bundle.min.js}" async></script>
 </head>
 <body class="vh-100 d-flex flex-column">
 
